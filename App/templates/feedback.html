@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px 0;
+            min-height: 100vh;
+            margin: 0;
+        }
+          #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+        .container-wrapper {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h4, h5 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffc107;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-warning {
+            width: 100%;
+        }
+
+        .feedback-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px; /* Increased space between feedbacks */
+            border-radius: 5px;
+        }
+
+        .feedback-box strong {
+            font-size: 16px;
+            color: #343a40;
+        }
+
+        .feedback-box p {
+            margin: 5px 0 0;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .form-container {
+            margin-bottom: 30px; /* Adds spacing between form and feedback list */
+        }
+    </style>
+</head>
+<body>
+ <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+<div class="container-wrapper">
+     <a href="{% url 'index' %}" class="btn btn-primary">Go to Index</a>
+    <h4>⭐ Submit Your Feedback</h4>
+    <div class="form-container">
+        <!-- Feedback Form without Django forms -->
+        <form method="post" action="{% url 'feedback' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="patient">Patient Name</label>
+                <input type="text" name="patient" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating</label>
+                <select name="rating" class="form-control" required>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Feedback Message</label>
+                <textarea name="message" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Submit</button>
+        </form>
+    </div>
+
+    <hr>
+<h5>📝 All Feedbacks</h5>
+{% for fb in feedbacks %}
+<div class="feedback-box">
+    <strong>{{ fb.patient }}</strong> - 
+    <span class="stars">
+        {% for star in fb.stars %}
+        {{ star }}
+        {% endfor %}
+    </span>
+    <p>{{ fb.message }}</p>
+</div>
+{% empty %}
+<p class="text-center text-muted">No feedback submitted yet.</p>
+{% endfor %}
+
+
+
+</body>
+</html>

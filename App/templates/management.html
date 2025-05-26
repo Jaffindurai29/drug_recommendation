@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Recommendation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Video background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Centering the button container */
+        .button-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .btn-management {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: #5f88b3;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .btn-management:hover {
+            background-color: #6990ba;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Video Background -->
+<video autoplay muted loop class="video-background">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    <!-- You can add .webm or .ogg formats for broader compatibility -->
+</video>
+
+<div class="button-container">
+    <a href="{% url 'index' %}" class="btn btn-management">🏥 Drug Recommendation</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Recommendation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .dashboard-title h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px black;
+        }
+
+        .btn-block {
+            font-size: 14px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+<div class="container">
+    <div class="dashboard-title">
+        <h3>🏥 Welcome to Drug System 🏥</h3>
+    </div>
+
+    <a href="{% url 'register_patient' %}" class="btn btn-outline-primary btn-block">➕ Register Patient</a>
+    <a href="{% url 'view_patients' %}" class="btn btn-outline-secondary btn-block">👥 View Patients</a>
+    <a href="{% url 'book_appointment' %}" class="btn btn-outline-success btn-block">📅 Book Appointment</a>
+    <a href="{% url 'view_appointments' %}" class="btn btn-outline-info btn-block">📖 View Appointments</a>
+    <a href="{% url 'drug_recommendation' %}" class="btn btn-outline-dark btn-block">💊 Drug Recommendation</a>
+    <a href="{% url 'feedback' %}" class="btn btn-outline-warning btn-block">⭐ Feedback</a>
+    <a href="{% url 'doctor_suggestion' %}" class="btn btn-outline-danger btn-block">🩺 Doctor Suggestion</a>
+</div>
+
+</body>
+</html>

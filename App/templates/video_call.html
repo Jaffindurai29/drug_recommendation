@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add custom styles if needed */
+        body {
+            background-image: url("{% static 'samples.jpg' %}");
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px 0;
+            min-height: 100vh;
+            margin: 0;
+        }
+          #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+    </style>
+</head>
+<body>
+     <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+    <div class="container">
+        <h4 class="text-center">Video Call</h4>
+
+        <!-- Video call setup -->
+        <div class="call-box">
+            <button class="btn btn-success" onclick="startVideoCall()">Start Video Call</button>
+            <div id="video-call-container" style="display:none;">
+                <!-- Your video call interface goes here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startVideoCall() {
+            // Logic to initiate video call (e.g., using WebRTC or a third-party API)
+            document.getElementById('video-call-container').style.display = 'block';
+            alert('Video call started!');
+        }
+    </script>
+</body>
+</html>

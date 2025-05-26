@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { /* Replace with your image path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px 0;
+            min-height: 100vh;
+        }
+          #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h4 {
+            text-align: center;
+            color: #28a745;
+            margin-bottom: 30px;
+        }
+
+        .table th {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+ <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+<div class="content-wrapper">
+     <a href="{% url 'index' %}" class="btn btn-primary">Go to Index</a>
+    <h4>📅 Appointments</h4>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for appt in appointments %}
+        <tr>
+            <td>{{ appt.patient.name }}</td>
+            <td>{{ appt.doctor }}</td>
+            <td>{{ appt.date }}</td>
+            <td>{{ appt.time }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No appointments scheduled.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

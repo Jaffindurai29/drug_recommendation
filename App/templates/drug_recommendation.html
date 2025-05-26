@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Recommendation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px 0;
+            min-height: 100vh;
+            margin: 0;
+        }
+          #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+        .container-wrapper {
+            max-width: 900px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h4, h5 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .btn-dark {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .recommendation-section {
+            margin-top: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-success {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .recommendation-section p {
+            font-size: 16px;
+            color: #343a40;
+        }
+
+    </style>
+</head>
+<body>
+     <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+<div class="container-wrapper">
+    <a href="{% url 'index' %}" class="btn btn-primary">Go to Index</a>
+    <h4>💊 Drug Recommendation</h4>
+    <form method="post">
+        {% csrf_token %}
+       <div class="form-group">
+        <input type="text" name="symptom" class="form-control" placeholder="Enter symptom (e.g. fever)">
+        </div>
+        <div class="form-group">
+            <input type="text" name="duration" class="form-control" placeholder="Enter duration (e.g. 5 days)">
+        </div>
+        <div class="form-group">
+            <input type="text" name="age" class="form-control" placeholder="Enter age">
+        </div>
+        <div class="form-group">
+            <input type="text" name="medication" class="form-control" placeholder="Enter current medications">
+        </div>
+        <div class="form-group">
+            <input type="text" name="travel" class="form-control" placeholder="Recent travel history">
+        </div>
+        <div class="form-group">
+            <input type="text" name="family_history" class="form-control" placeholder="Family history of diseases">
+        </div>
+        <div class="form-group">
+            <input type="text" name="lifestyle" class="form-control" placeholder="Lifestyle factors (e.g. smoking, diet)">
+        </div>
+        <button type="submit" class="btn btn-dark mt-2">Recommend</button>
+    </form>
+
+    {% if recommendation %}
+    <hr>
+    <div class="recommendation-section">
+        <h5>Recommended Drug: <span class="text-success">{{ recommendation }}</span></h5>
+        <p><strong>Food Suggestion:</strong> {{ food }}</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+symptom,duration,age,medication,travel,family_history,lifestyle,disease
+chills,8,25,antibiotics,no,no,smoking,cold
+cough,5,62,pain relievers,yes,no,smoking,diabetes
+fever,3,74,antibiotics,yes,yes,active,diabetes
+fatigue,10,75,pain relievers,no,yes,active,dengue
+fever,2,74,antibiotics,yes,yes,smoking,cold
+chills,14,10,antibiotics,yes,no,healthy,cold
+cough,6,62,antibiotics,yes,yes,poor diet,dengue
+fever,14,68,inhaler,no,yes,poor diet,cold
+night sweats,9,74,pain relievers,yes,no,healthy,flu
+chills,13,5,none,no,yes,healthy,cold
+cough,13,37,inhaler,no,no,healthy,flu
+fatigue,12,11,inhaler,yes,no,active,asthma
+night sweats,11,40,pain relievers,no,no,smoking,flu
+night sweats,11,39,pain relievers,yes,no,smoking,diabetes
+body pain,11,37,pain relievers,yes,no,healthy,cold
+fever,9,60,antibiotics,no,no,healthy,diabetes
+cough,8,74,antibiotics,yes,yes,poor diet,flu
+sore throat,8,53,none,yes,yes,active,cold
+fatigue,4,29,none,yes,no,active,asthma
+sore throat,7,41,none,no,no,healthy,asthma
+fatigue,10,69,antibiotics,no,yes,smoking,asthma
+sore throat,3,51,pain relievers,yes,yes,smoking,dengue
+fatigue,10,53,pain relievers,no,yes,smoking,asthma
+sore throat,13,43,pain relievers,yes,yes,healthy,diabetes
+fatigue,6,30,pain relievers,no,yes,healthy,dengue
+headache,9,50,inhaler,no,yes,active,dengue
+fever,14,70,inhaler,yes,yes,healthy,diabetes
+chills,5,67,none,yes,yes,smoking,diabetes
+body pain,8,22,inhaler,yes,no,healthy,flu
+fatigue,9,37,pain relievers,yes,yes,healthy,asthma
+chills,5,73,none,yes,no,poor diet,diabetes
+cough,4,55,antibiotics,no,no,active,diabetes
+fatigue,1,5,inhaler,no,yes,smoking,diabetes
+sore throat,13,20,antibiotics,no,yes,healthy,cold
+headache,8,66,antibiotics,yes,no,active,asthma
+sore throat,4,51,pain relievers,no,yes,poor diet,diabetes
+night sweats,7,28,none,no,no,smoking,asthma
+chills,14,73,antibiotics,yes,yes,smoking,flu
+night sweats,6,20,none,no,yes,active,flu
+body pain,1,7,pain relievers,yes,no,active,diabetes
+headache,8,45,antibiotics,yes,yes,poor diet,dengue
+chills,12,18,antibiotics,yes,yes,smoking,asthma
+fever,6,53,pain relievers,yes,yes,poor diet,cold
+headache,9,44,antibiotics,no,no,smoking,diabetes
+sore throat,12,61,none,yes,no,poor diet,cold
+fever,2,62,antibiotics,no,yes,healthy,asthma
+cough,11,63,inhaler,no,yes,poor diet,cold
+night sweats,9,51,antibiotics,yes,no,poor diet,dengue
+fever,4,25,none,no,no,smoking,asthma
+body pain,12,35,none,yes,yes,poor diet,diabetes
+body pain,13,26,pain relievers,yes,yes,poor diet,flu
+cough,13,55,pain relievers,no,yes,smoking,dengue
+night sweats,3,72,inhaler,yes,yes,smoking,flu
+cough,5,78,none,no,no,active,cold
+fever,2,35,antibiotics,yes,yes,healthy,diabetes
+sore throat,14,76,pain relievers,yes,yes,active,dengue
+fatigue,1,16,inhaler,yes,no,healthy,diabetes
+sore throat,11,61,inhaler,no,yes,healthy,asthma
+fatigue,14,15,antibiotics,no,yes,smoking,dengue
+cough,2,55,antibiotics,no,yes,poor diet,cold
+night sweats,1,10,antibiotics,yes,no,healthy,cold
+cough,11,12,antibiotics,no,yes,active,dengue
+fatigue,3,32,antibiotics,no,no,smoking,asthma
+sore throat,11,13,inhaler,yes,no,healthy,diabetes
+body pain,5,23,antibiotics,no,yes,healthy,cold
+body pain,9,15,inhaler,yes,no,poor diet,flu
+night sweats,14,36,none,no,yes,poor diet,dengue
+chills,10,10,inhaler,yes,yes,smoking,cold
+night sweats,10,58,pain relievers,no,yes,active,flu
+fatigue,3,61,none,yes,no,smoking,dengue
+fever,4,37,pain relievers,yes,no,poor diet,flu
+sore throat,1,74,none,no,yes,poor diet,dengue
+headache,11,26,inhaler,no,yes,healthy,flu
+night sweats,2,62,none,yes,yes,healthy,asthma
+chills,1,63,none,no,no,healthy,asthma
+body pain,13,32,pain relievers,yes,no,healthy,diabetes
+sore throat,2,26,antibiotics,yes,no,smoking,cold
+sore throat,6,16,inhaler,no,no,healthy,cold
+cough,12,33,none,yes,no,poor diet,dengue
+chills,9,73,inhaler,yes,no,smoking,cold
+cough,12,32,none,no,no,poor diet,diabetes
+night sweats,7,10,antibiotics,no,no,healthy,flu
+body pain,11,58,none,yes,no,active,asthma
+chills,12,19,antibiotics,yes,yes,smoking,diabetes
+cough,10,31,antibiotics,yes,no,healthy,diabetes
+fever,3,5,antibiotics,no,yes,active,diabetes
+fatigue,11,71,antibiotics,no,no,healthy,flu
+night sweats,8,61,none,yes,yes,healthy,dengue
+sore throat,9,66,antibiotics,yes,no,smoking,diabetes
+fatigue,14,61,inhaler,yes,no,healthy,flu
+fever,5,12,none,no,no,poor diet,dengue
+night sweats,2,43,pain relievers,yes,no,healthy,cold
+night sweats,7,67,pain relievers,yes,yes,active,diabetes
+sore throat,9,19,antibiotics,no,yes,poor diet,asthma
+sore throat,11,31,none,no,no,poor diet,asthma
+headache,14,13,inhaler,no,yes,smoking,cold
+fever,9,74,antibiotics,yes,no,healthy,asthma
+chills,14,59,inhaler,no,yes,healthy,cold
+sore throat,6,69,inhaler,no,yes,smoking,cold
+headache,13,18,inhaler,no,yes,active,dengue

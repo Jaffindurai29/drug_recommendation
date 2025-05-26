@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Suggestion</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px 0;
+            min-height: 100vh;
+            margin: 0;
+        }
+          #bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+        .container-wrapper {
+            max-width: 900px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h4, h5 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .btn-info {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .list-group-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item button {
+            margin: 5px 10px 0 0;
+            font-size: 14px;
+        }
+
+        .list-group-item img {
+            margin-top: 10px;
+        }
+
+        .list-group-item strong {
+            font-size: 18px;
+            color: #343a40;
+        }
+
+    </style>
+</head>
+<body>
+ <video autoplay muted loop id="bg-video">
+    <source src="{% static 'sample.mp4' %}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+<div class="container-wrapper">
+     <a href="{% url 'index' %}" class="btn btn-primary">Go to Index</a>
+    <h4>💊 Doctor Suggestion</h4>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="symptoms" class="form-control" placeholder="Enter symptoms (e.g. fever, pain)">
+        </div>
+        <button class="btn btn-info mt-2">Suggest</button>
+    </form>
+
+    {% if suggested_doctors %}
+    <hr>
+    <h5>Suggested Doctors:</h5>
+    <ul class="list-group">
+        {% for doc in suggested_doctors %}
+        <li class="list-group-item">
+            <strong>{{ doc.0 }}</strong> – {{ doc.1 }}<br>
+            <button class="btn btn-sm btn-primary" onclick="startAudioCall()">🎧 Audio Call</button>
+            <button class="btn btn-sm btn-success" onclick="startVideoCall()">📹 Video Call</button>
+
+            <img src="{% static 'src.png' %}" alt="GPay" style="max-width: 100%; height: auto;">
+
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+<script>
+    function startAudioCall() {
+        // Redirect to a new page for audio call (you can implement a proper call interface here)
+        window.location.href = "/audio_call_page/";
+    }
+
+    function startVideoCall() {
+        // Redirect to a new page for video call (you can implement a proper call interface here)
+        window.location.href = "/video_call_page/";
+    }
+</script>
+
+</body>
+</html>
