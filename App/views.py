@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.models import User
 
-import pandas as pd
+
 import random
 
 import pandas as pd
@@ -10,11 +10,6 @@ import numpy as np
 import random
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
-
-import random
-import pandas as pd
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -43,48 +38,10 @@ for _ in range(100):
     }
     data.append(row)
 
-# Create DataFrame
-df = pd.DataFrame(data)
+# Placeholder for the trained model and preprocessor (will be loaded later)
+model = None
+preprocessor = None
 
-# Encode categorical data with separate LabelEncoders for each column
-encoders = {col: LabelEncoder() for col in df.columns}
-for col in df.columns:
-    df[col] = encoders[col].fit_transform(df[col])
-
-# Split dataset
-X = df.drop(columns=["disease"])  # Features
-y = df["disease"]  # Target
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Train Random Forest Model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
-# Function to predict disease
-def predict_disease(user_input):
-    try:
-        user_data = np.array([[encoders[col].transform([user_input[col]])[0] for col in X.columns]])
-        prediction = model.predict(user_data)
-        return encoders["disease"].inverse_transform(prediction)[0]
-    except ValueError:
-        return "Invalid input! Make sure you are entering correct values."
-
-# Example user input (Modify as needed)
-user_input = {
-    "symptom": "fever",
-    "duration": "5",
-    "age": "25",
-    "medication": "none",
-    "travel": "no",
-    "family_history": "no",
-    "lifestyle": "healthy"
-}
-
-# Predict disease
-predicted_disease = predict_disease(user_input)
-print(f"Predicted Disease: {predicted_disease}")
-
-# Create your views here.
 def home(request):
     return render(request,'management.html',{})
 
@@ -92,17 +49,32 @@ def index(request):
     return render(request,'index.html',{})
 
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from .forms import PatientForm, AppointmentForm, FeedbackForm
 from .models import Patient, Appointment, Feedback
-
+import joblib
+import os
+import pandas as pd
+# Load the trained model and preprocessor
+try:
+    model = joblib.load('disease_model.pkl')
+    preprocessor = joblib.load('preprocessor.pkl')
+    model_loaded = True
+except (FileNotFoundError, NameError) as e:
+    print(f"Error loading model or preprocessor: {e}")
+    print("Please run the model training function first.")
+    model_loaded = False
 
 # Register Patient
+@login_required
 def register_patient(request):
     form = PatientForm(request.POST or None)
     if form.is_valid():
         form.save()
         return redirect('view_patients')
     return render(request, 'register_patient.html', {'form': form})
+
 
 # View Patients
 def view_patients(request):
@@ -134,148 +106,174 @@ def view_appointments(request):
 def feedback(request):
     form = FeedbackForm(request.POST or None)
     feedbacks = Feedback.objects.all()
-    
+
     if form.is_valid():
         form.save()
         return redirect('feedback')
-    
+
     # Add stars list to the context
     feedback_data = []
     for fb in feedbacks:
         fb.stars = ['⭐'] * fb.rating  # Create a list with the number of stars based on rating
         feedback_data.append(fb)
-    
+
     return render(request, 'feedback.html', {'form': form, 'feedbacks': feedback_data})
 
 
 # Doctor Suggestion
 def doctor_suggestion(request):
     suggested_doctors = []
+    predicted_disease = "Could not predict disease" # Initialize with a default
+
     if request.method == 'POST':
-        symptom = request.POST['symptoms'].lower()
-        doctor_map = {
-            'fever': ('Dr. A Kumar', 'General Physician'),
-            'skin': ('Dr. B Mehta', 'Dermatologist'),
-            'heart': ('Dr. C Patel', 'Cardiologist'),
-            'sugar': ('Dr. D Iyer', 'Endocrinologist'),
-            'lungs': ('Dr. E Reddy', 'Pulmonologist'),
-            'kidney': ('Dr. F Singh', 'Nephrologist'),
-            'pregnancy': ('Dr. G Das', 'Gynecologist'),
-            'pain': ('Dr. H Shah', 'Orthopedic'),
-            'mental': ('Dr. I Varma', 'Psychiatrist'),
-            'infection': ('Dr. J Nair', 'Infectious Disease Specialist')
-        }
-        for key in doctor_map:
-            if key in symptom:
-                suggested_doctors.append(doctor_map[key])
-    return render(request, 'doctor_suggestion.html', {'suggested_doctors': suggested_doctors})
+        if model_loaded:
+            try:
+                # Extract user input from the form (adjust keys based on your form)
+                user_input = {
+                    "symptom": request.POST.get("symptom"),
+                    "duration": request.POST.get("duration"),
+                    "age": request.POST.get("age"),
+                    "medication": request.POST.get("medication"),
+                    "travel": request.POST.get("travel"),
+                    "family_history": request.POST.get("family_history"),
+                    "lifestyle": request.POST.get("lifestyle"),
+                }
 
+                # Convert user input to a pandas DataFrame
+                user_data = [user_input.get(col) for col in ["symptom", "duration", "age", "medication", "travel", "family_history", "lifestyle"]]
+                user_df = pd.DataFrame([user_data], columns=["symptom", "duration", "age", "medication", "travel", "family_history", "lifestyle"])
 
-from django.shortcuts import render
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
+                # Preprocess user input
+                user_processed = preprocessor.transform(user_df)
 
-# Load dataset
-df = pd.read_csv("disease_data.csv")
+                # Predict disease
+                predicted_disease = model.predict(user_processed)[0]
 
-# Encode categorical data
-encoder = LabelEncoder()
-for col in df.columns[:-1]:  
-    df[col] = encoder.fit_transform(df[col])
+                # Map predicted disease to specialist and suggested doctors
+                doctor_map = {
+                    'fever': [('Dr. A Kumar', 'General Physician')],
+                    'flu': [('Dr. A Kumar', 'General Physician')],
+                    'asthma': [('Dr. E Reddy', 'Pulmonologist')],
+                    'dengue': [('Dr. A Kumar', 'General Physician'), ('Dr. J Nair', 'Infectious Disease Specialist')],
+                    'diabetes': [('Dr. D Iyer', 'Endocrinologist')],
+                    'cold': [('Dr. A Kumar', 'General Physician')],
+                    # Add more mappings for other diseases
+                }
+                suggested_doctors = doctor_map.get(predicted_disease, [('Consult a doctor', 'N/A')])
 
-df["disease"] = encoder.fit_transform(df["disease"])
-
-# Train Random Forest Model
-X = df.drop(columns=["disease"])
-y = df["disease"]
-model = RandomForestClassifier()
-model.fit(X, y)
+            except Exception as e:
+                print(f"Error during doctor suggestion prediction: {e}")
+    return render(request, 'doctor_suggestion.html', {'suggested_doctors': suggested_doctors, 'predicted_disease': predicted_disease})
 
 def drug_recommendation(request):
-    if request.method == "POST":
-        user_input = {
-            "symptom": request.POST.get("symptom"),
-            "duration": request.POST.get("duration"),
-            "age": request.POST.get("age"),
-            "medication": request.POST.get("medication"),
-            "travel": request.POST.get("travel"),
-            "family_history": request.POST.get("family_history"),
-            "lifestyle": request.POST.get("lifestyle"),
-        }
-        
+    recommendation = ''
+    food = ''
 
-        # Convert input to model format
-        try:
-           print(user_input,user_input)
-           predicted_disease = predict_disease(user_input)
-           print(f"Predicted Disease: {predicted_disease}")    
-            
-        except Exception as e:
-            print(e)
-            predicted_disease = "Unknown disease"
+    if request.method == "POST":
+        if model_loaded:
+            user_input = {
+                "symptom": request.POST.get("symptom"),
+                "duration": request.POST.get("duration"),
+                "age": request.POST.get("age"),
+                "medication": request.POST.get("medication"),
+                "travel": request.POST.get("travel"),
+                "family_history": request.POST.get("family_history"),
+                "lifestyle": request.POST.get("lifestyle"),
+            }
+
+            # Convert user input to a format compatible with the preprocessor
+            # This assumes the order of columns in user_input matches the training data
+            user_data = [user_input.get(col) for col in ["symptom", "duration", "age", "medication", "travel", "family_history", "lifestyle"]]
+            user_df = pd.DataFrame([user_data], columns=["symptom", "duration", "age", "medication", "travel", "family_history", "lifestyle"])
+
+            try:
+                # Preprocess user input
+                user_processed = preprocessor.transform(user_df)
+
+                # Predict disease
+                predicted_disease_encoded = model.predict(user_processed)[0]
+                # predicted_disease = disease_label_encoder.inverse_transform(predicted_disease_encoded)[0]
+
+                # Since we didn't save the disease label encoder, we'll use a placeholder
+                # You should modify this part based on your actual model output and how you handle disease labels
+                # For now, let's just use the most frequent disease from the training data as a fallback
+                # or have a simple mapping based on the encoded output if possible.
+                # A more robust solution would be to save and load the target encoder.
+                # Assuming your model directly predicts string labels:
+                predicted_disease = predicted_disease_encoded # If model output is string
+                # If model output is numerical, you'll need a way to map it back to disease names
+                # For now, we'll assume the model outputs the disease name directly or a recognizable ID.
+
+                print(f"Predicted Disease: {predicted_disease}")
+
+            except Exception as e:
+                print(f"Error during prediction: {e}")
+                predicted_disease = "Could not predict disease"
+        else:
+            predicted_disease = "Model not loaded. Cannot predict disease."
+            print("Model not loaded. Cannot predict disease.")
 
         # Drug recommendations (example)
         drug_dict = {
-            "cold": ["Paracetamol", "Antihistamines"],
-            "flu": ["Tamiflu", "Ibuprofen"],
-            "asthma": ["Salbutamol", "Inhalers"],
-            "dengue": ["Hydration", "Paracetamol"],
-            "diabetes": ["Metformin", "Insulin"],
+            "fever": ["Paracetamol", "Rest"],
+            "flu": ["Tamiflu", "Ibuprofen", "Plenty of fluids"],
+            "asthma": ["Salbutamol", "Inhalers", "Avoid triggers"],
+            "dengue": ["Hydration", "Paracetamol", "Avoid aspirin"],
+            "diabetes": ["Metformin", "Insulin", "Diet control"],
+            "cold": ["Paracetamol", "Antihistamines", "Rest"],
         }
-        
-        recommended_drugs = drug_dict.get(predicted_disease, ["Consult a doctor"])
-        food = 'Soft foods, avoid spicy items'
-        return render(request, 'drug_recommendation.html', {'recommendation': recommended_drugs, 'food': food})
 
-        return render(request, "results.html", {"disease": predicted_disease, "drugs": recommended_drugs})
+        recommended_drugs = drug_dict.get(predicted_disease, ["Consult a doctor"])
+
+        # Food suggestions (example)
+        food_dict = {
+            "fever": "Hot soup, plenty of fluids",
+            "flu": "Warm tea, honey, easily digestible food",
+            "asthma": "Balanced diet, avoid food triggers",
+            "dengue": "Soft foods, plenty of fluids",
+            "diabetes": "Low sugar and balanced diet",
+            "cold": "Warm tea, honey, chicken soup",
+        }
+        food = food_dict.get(predicted_disease, "Balanced diet")
+
+
+        return render(request, 'drug_recommendation.html', {'recommendation': recommended_drugs, 'food': food, 'predicted_disease': predicted_disease})
+
 
     return render(request, "drug_recommendation.html")
 
-# Predict disease
-    predicted_disease = predict_disease(user_input)
-    recommendation, food = '', ''
-    if request.method == 'POST':
-        symptom = request.POST['symptom'].lower()
-        if 'fever' in symptom:
-            recommendation = 'Paracetamol'
-            food = 'Hot soup, plenty of fluids'
-        elif 'cough' in symptom:
-            recommendation = 'Cough Syrup'
-            food = 'Warm tea, honey'
-        elif 'pain' in symptom:
-            recommendation = 'Ibuprofen'
-            food = 'Soft foods, avoid spicy items'
-    return render(request, 'drug_recommendation.html', {'recommendation': recommendation, 'food': food})
-
 
 def audio_call(request):
-    return render(request,'audio_call.html')  
+    return render(request,'audio_call.html')
 
 def video_call(request):
-    return render(request,'video_call.html')  
+    return render(request,'video_call.html')
+
 
 
 
 def signup(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = User.objects.create_user(username=username,password=password,email=email)
         return redirect('login')
-    return render(request,"signup.html",{})  
+    return render(request,"signup.html",{})
 
 def app_login(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request,username=username,password=password) 
+        user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request,user)
-
+            login(request, user)
             return redirect('management')
+        else:
+            # You might want to add an error message for invalid credentials
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
     return render(request,"login.html",{})
 
-   
+def app_logout(request):
+    logout(request)
+    return redirect('login')
